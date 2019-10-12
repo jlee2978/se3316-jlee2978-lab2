@@ -1,18 +1,40 @@
+var items = [];
+
+//item includes type (book or CD), picture, name, days before due
+items.push({"ID": 1, "Type": "Book", "Image": "book1.jpg", "Name": "The Wealth of Nations", "Due": 30});
+items.push({"ID": 2, "Type": "Book", "Image": "book2.jpg", "Name": "The Lord of the Rings", "Due": 30});
+items.push({"ID": 3, "Type": "Book", "Image": "book3.jpg", "Name": "The Alchemist", "Due": 30});
+items.push({"ID": 4, "Type": "Book", "Image": "book4.jpg", "Name": "The Little Prince", "Due": 30});
+items.push({"ID": 5, "Type": "Book", "Image": "book5.jpg", "Name": "The Hobbit", "Due": 30});
+items.push({"ID": 6, "Type": "CD", "Image": "cd1.jpg", "Name": "The Marshall Mathers LP", "Due": 10});
+items.push({"ID": 7, "Type": "CD", "Image": "cd2.jpg", "Name": "Stoney", "Due": 10});
+items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Secrets", "Due": 10});
+items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "Due": 10});
+items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With Me", "Due": 10});
+
+var nameField;
+var emailField;
+var birthField;
+
 function login()
 {
-    var nameField = getElement("name").value;
+    nameField = getElement("name").value;
+    emailField = getElement("email").value.trim();
+    birthField = getElement("birth-year").value;
+
+    //check if name is valid
     if (!nameCheck(nameField))
     {
         return;
     }
 
-    var emailField = getElement("email").value.trim();
+    //check if email is valid    
     if (!emailCheck(emailField))
     {
         return;
     }
 
-    var birthField = getElement("birth-year").value;
+    //check if birth year is valid
     if (!birthCheck(birthField))
     {
         return;
@@ -37,6 +59,7 @@ function login()
     }
     getElement("userInfo").innerHTML = nameField+" ("+emailField+") ["+age+"]"
 
+    displayItems();
 }
 
 function nameCheck(fieldValue)
@@ -80,7 +103,28 @@ function birthCheck(fieldValue)
     return 1;
 }
 
+//use document.getElementByID() to pick element
 function getElement(id)
 {
     return document.getElementById(id);
+}
+
+function displayItems()
+{
+    var olItems = getElement("available-items");
+    var itemTemplate = getElement("item-template");
+    var cloneTemplate;
+    for (var i = 0; i < items.length; i++)
+    {
+        cloneTemplate = itemTemplate.cloneNode(true);
+        var li = document.createElement("li");
+
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
+
+        li.innerHTML = cloneTemplate.innerHTML;
+        olItems.appendChild(li);
+    }
 }

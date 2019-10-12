@@ -6,6 +6,22 @@
         <script type='text/javascript' src='script.js'></script>
     </head>
     <body>
+        <template id="item-template">
+            <li id="#itemID" style="width: 100%;">
+                <span class="item-type" style="width:20%">
+                    #type
+                </span>
+                <span class="item-image">
+                    <img src="#image" width="100" height="100">
+                </span>
+                <span class="item-name" style="width:40%">
+                    #name
+                </span>                
+                <span class="item-due" style="width:20%">
+                    #due
+                </span>
+            </li>
+        </template>
         <h1>User Information</h1>
         <form id="loginForm" onsubmit = "event.preventDefault(); login();">
             Name: <input type="text" id="name">
@@ -20,7 +36,7 @@
         </form>
         <h1>Library Checkout</h1>
         <h2>Items Available:</h2>
-        <ol id="available-items"></ol>
+        <ol id="available-items" style="list-style: none"></ol>
         <h2>Checkout List:</h2>
         <ol id="basket"></ol>
     </body>
