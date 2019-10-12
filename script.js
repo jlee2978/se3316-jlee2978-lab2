@@ -1,16 +1,16 @@
 var items = [];
 
 //item includes type (book or CD), picture, name, days before due
-items.push({"ID": 1, "Type": "Book", "Image": "book1.jpg", "Name": "The Wealth of Nations", "Due": 30});
-items.push({"ID": 2, "Type": "Book", "Image": "book2.jpg", "Name": "The Lord of the Rings", "Due": 30});
-items.push({"ID": 3, "Type": "Book", "Image": "book3.jpg", "Name": "The Alchemist", "Due": 30});
-items.push({"ID": 4, "Type": "Book", "Image": "book4.jpg", "Name": "The Little Prince", "Due": 30});
-items.push({"ID": 5, "Type": "Book", "Image": "book5.jpg", "Name": "The Hobbit", "Due": 30});
-items.push({"ID": 6, "Type": "CD", "Image": "cd1.jpg", "Name": "The Marshall Mathers LP", "Due": 10});
-items.push({"ID": 7, "Type": "CD", "Image": "cd2.jpg", "Name": "Stoney", "Due": 10});
-items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Secrets", "Due": 10});
-items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "Due": 10});
-items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With Me", "Due": 10});
+items.push({"ID": 1, "Type": "Book", "Image": "book1.jpg", "Name": "The Wealth of Nations", "French": "La Richesse des Nations", "Due": 30});
+items.push({"ID": 2, "Type": "Book", "Image": "book2.jpg", "Name": "The Lord of the Rings", "French": "Le Seigneur des Anneaux", "Due": 30});
+items.push({"ID": 3, "Type": "Book", "Image": "book3.jpg", "Name": "The Alchemist", "French": "L'alchimiste", "Due": 30});
+items.push({"ID": 4, "Type": "Book", "Image": "book4.jpg", "Name": "The Little Prince", "French": "Le petit Prince", "Due": 30});
+items.push({"ID": 5, "Type": "Book", "Image": "book5.jpg", "Name": "The Hobbit", "French": "Le Hobbit", "Due": 30});
+items.push({"ID": 6, "Type": "CD", "Image": "cd1.jpg", "Name": "The Marshall Mathers LP", "French": "Marshall Mathers LP [Française]", "Due": 10});
+items.push({"ID": 7, "Type": "CD", "Image": "cd2.jpg", "Name": "Stoney", "French": "Stoney [Française]", "Due": 10});
+items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Secrets", "French": "Les amis gardent leurs secrets", "Due": 10});
+items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "French": "Le spectacle Eminem", "Due": 10});
+items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With Me", "French": "Viens avec moi", "Due": 10});
 
 var nameField;
 var emailField;
@@ -124,7 +124,13 @@ function displayItems()
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, items[i].ID);
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
-        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+        if (getElement("language").value == "E")
+        {
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+        }
+        else{
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
+        }
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
 
         li.innerHTML = cloneTemplate.innerHTML;
@@ -147,7 +153,16 @@ function addItem(itemID)
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
-            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+            //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+            
+            if (getElement("language").value == "E")
+            {
+                cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+            }
+            else{
+                cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
+            }
+            
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
 
             items.splice(i, 1);
