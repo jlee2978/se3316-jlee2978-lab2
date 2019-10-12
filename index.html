@@ -7,9 +7,17 @@
     </head>
     <body>
         <h1>User Information</h1>
-        Name: <input type="text" id="name">
-        Email:  <input type="text" id="email">
-        Year of birth: <input type="text" id="birth-year">
+        <form id="loginForm" onsubmit = "event.preventDefault(); login();">
+            Name: <input type="text" id="name">
+            Email:  <input type="text" id="email">
+            Year of birth: <input type="text" id="birth-year">
+            <input type="Submit" value = "Login">
+        </form>
+        <form id ="loggedIn">
+            <span id="userInfo">
+
+            </span>
+        </form>
         <h1>Library Checkout</h1>
         <h2>Items Available:</h2>
         <ol id="available-items"></ol>
