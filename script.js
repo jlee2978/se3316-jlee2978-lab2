@@ -104,12 +104,6 @@ function birthCheck(fieldValue)
     return 1;
 }
 
-//use document.getElementByID() to pick element
-function getElement(id)
-{
-    return document.getElementById(id);
-}
-
 function displayItems()
 {
     var olItems = getElement("available-items");
@@ -152,7 +146,7 @@ function addItem(itemID)
         if (items[i].ID == itemID) {
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
-            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
+            //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
             //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
             
             if (getElement("language").value == "E")
@@ -163,7 +157,10 @@ function addItem(itemID)
                 cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
             }
             
-            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
+            var dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + items[i].Due);
+            dueDate = dueDate.getFullYear() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getDate();
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, dueDate);
 
             items.splice(i, 1);
             document.querySelector('#available-items li[id="'+itemID+'"]').remove();
@@ -173,4 +170,17 @@ function addItem(itemID)
     }
     li.innerHTML = cloneTemplate.innerHTML;
     olBasket.appendChild(li);
+}
+
+
+
+
+
+
+
+
+//use document.getElementByID() to pick element
+function getElement(id)
+{
+    return document.getElementById(id);
 }
