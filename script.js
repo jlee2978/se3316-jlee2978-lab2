@@ -15,6 +15,7 @@ items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With 
 var nameField;
 var emailField;
 var birthField;
+var itemTemplate;
 
 function login()
 {
@@ -112,13 +113,15 @@ function getElement(id)
 function displayItems()
 {
     var olItems = getElement("available-items");
-    var itemTemplate = getElement("item-template");
     var cloneTemplate;
+    itemTemplate = getElement("item-template");
+
     for (var i = 0; i < items.length; i++)
     {
         cloneTemplate = itemTemplate.cloneNode(true);
         var li = document.createElement("li");
 
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, items[i].ID);
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
@@ -127,4 +130,32 @@ function displayItems()
         li.innerHTML = cloneTemplate.innerHTML;
         olItems.appendChild(li);
     }
+}
+
+function addItem(itemID)
+{
+    var olBasket = getElement("basket");
+    var cloneTemplate;
+    itemTemplate = getElement("basket-template");
+
+    cloneTemplate = itemTemplate.cloneNode(true);
+    var li = document.createElement("li");
+
+    for(var i =0; i < items.length; i++)
+    {
+        if (items[i].ID == itemID) {
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
+
+            items.splice(i, 1);
+            document.querySelector('#available-items li[id="'+itemID+'"]').remove();
+
+            break;
+        }
+    }
+    li.innerHTML = cloneTemplate.innerHTML;
+    olBasket.appendChild(li);
 }
