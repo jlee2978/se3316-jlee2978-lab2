@@ -1,4 +1,5 @@
 var items = [];
+var basket = [];
 
 //item includes type (book or CD), picture, name, days before due
 items.push({"ID": 1, "Type": "Book", "Image": "book1.jpg", "Name": "The Wealth of Nations", "French": "La Richesse des Nations", "Due": 30});
@@ -141,9 +142,10 @@ function addItem(itemID)
     cloneTemplate = itemTemplate.cloneNode(true);
     var li = document.createElement("li");
 
-    for(var i =0; i < items.length; i++)
+    for(var i = 0; i < items.length; i++)
     {
-        if (items[i].ID == itemID) {
+        if (items[i].ID == itemID)
+        {
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
             //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
@@ -161,7 +163,10 @@ function addItem(itemID)
             dueDate.setDate(dueDate.getDate() + items[i].Due);
             dueDate = dueDate.getFullYear() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getDate();
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, dueDate);
+            
+            basket.push(items[i]);
 
+            //remove item from the items array and also remove it from the displayed list item
             items.splice(i, 1);
             document.querySelector('#available-items li[id="'+itemID+'"]').remove();
 
@@ -172,7 +177,43 @@ function addItem(itemID)
     olBasket.appendChild(li);
 }
 
+function removeItem(itemID)
+{
+    var olItems = getElement("available-items");
+    var cloneTemplate;
+    itemTemplate = getElement("item-template");
 
+    for (var i = 0; i< basket.length; i++)
+    {
+        if (basket[i].ID == itemID)
+        {
+            items.push(basket[i]);
+
+            cloneTemplate = itemTemplate.cloneNode(true);
+            var li = document.createElement("li");
+
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, basket[i].Type);
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, basket[i].Image);
+            if (getElement("language").value == "E")
+            {
+                cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, basket[i].Name);
+            }
+            else{
+                cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, basket[i].French);
+            }
+            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, basket[i].Due);
+
+            li.innerHTML = cloneTemplate.innerHTML;
+            olItems.appendChild(li);
+            
+            //remove item from the basket array and also remove it from the displayed list item
+            document.querySelector('#basket li[id="'+itemID+'"]').remove();
+            basket.splice(i, 1);
+            break;
+        }
+    }
+}
 
 
 
