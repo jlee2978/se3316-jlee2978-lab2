@@ -1,5 +1,6 @@
 var items = [];
 var basket = [];
+var lastID;
 
 //item includes type (book or CD), picture, name, days before due
 items.push({"ID": 1, "Type": "Book", "Image": "book1.jpg", "Name": "The Wealth of Nations", "French": "La Richesse des Nations", "Due": 30});
@@ -13,56 +14,202 @@ items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Sec
 items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "French": "Le spectacle Eminem", "Due": 10});
 items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With Me", "French": "Viens avec moi", "Due": 10});
 
+lastID = items.length;
+
 var nameField;
 var emailField;
 var birthField;
 var itemTemplate;
+
+// Add a addDays functionality to the Date object
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + parseInt(days));
+    return date;
+}
 
 function login()
 {
     nameField = getElement("name").value;
     emailField = getElement("email").value.trim();
     birthField = getElement("birth-year").value;
-
-    //check if name is valid
-    if (!nameCheck(nameField))
-    {
-        return;
-    }
-
-    //check if email is valid    
-    if (!emailCheck(emailField))
-    {
-        return;
-    }
-
-    //check if birth year is valid
-    if (!birthCheck(birthField))
-    {
-        return;
-    }
     
-    /*
-    getElement("nameLabel").innerHTML = nameField;
-    getElement("name").innerHTML = "";
-    nameLabel = nameField;
-    var emailLabel = getElement("email");
-    var birthLabel = getElement("birth");
-    */
-
-    //hide labels and text
-    getElement("loginForm").style.display = "none";
-
-    //displays logged in user info
     var age = "Child";
     if((new Date()).getFullYear() - birthField > 18)
     {
         age = "Adult";
     }
-    getElement("userInfo").innerHTML = nameField+" ("+emailField+") ["+age+"]"
 
-    displayItems();
+    //if name is "admin" and year of birth is "1867"
+    if(nameField == "admin" && birthField == "1867")
+    {             
+
+        //hide labels and text
+        getElement("loginForm").style.display = "none";
+        getElement("userInfo").innerHTML = "Librarian" + " (" + emailField + ") [" + age + "]";
+        setVisibility('newItem', 'block');
+        setVisibility('available-items', 'block');
+
+        displayAdmin();
+    }
+    else
+    {
+        nameField = getElement("name").value;
+        emailField = getElement("email").value.trim();
+        birthField = getElement("birth-year").value;
+
+        //check if name is valid
+        if (!nameCheck(nameField))
+        {
+            return;
+        }
+
+        //check if email is valid    
+        if (!emailCheck(emailField))
+        {
+            return;
+        }
+
+        //check if birth year is valid
+        if (!birthCheck(birthField))
+        {
+            return;
+        }        
+        //hide labels and text
+        getElement("loginForm").style.display = "none";
+        getElement("loggedIn").style.display = "block";
+
+        //displays logged in user info
+        getElement("userInfo").innerHTML = nameField+" ("+emailField+") ["+age+"]";
+        
+        setVisibility('newItem', 'none');
+        setVisibility('available-items', 'block');
+        setVisibility('basket', 'block');
+        setVisibility('checkout', 'block');
+
+        displayItems();
+    }
+
+    setVisibility('main-section', 'block');
+    setVisibility('loggedIn', 'block');
+    //show items and basket
+    //getElement("available-items").style.display = "block";
+    //getElement("basket").style.display = "block";
 }
+
+function logout()
+{
+    if(basket.length > 0)
+    {
+        alert("Please checkout or remove all items from basket.");
+        return;
+    }
+    getElement("loginForm").reset();
+    getElement("userInfo").innerHTML = "";
+    //getElement("userInfo").style.display = "block";
+    getElement("loginForm").style.display = "block";
+    getElement("loggedIn").style.display = "none";
+
+    setVisibility('main-section', 'none');
+
+    setVisibility('newItem', 'none');
+    setVisibility('available-items', 'none');
+    setVisibility('checkout', 'none');
+
+    //clear basket
+    /*
+    for (var i = 0; i < basket.length; i++)
+    {
+        removeItem(basket[i]);
+    }
+    basket = [];
+    */
+
+    
+
+    //clear items and basket
+    getElement("available-items").style.display = "none";
+    getElement("basket").style.display = "none";
+
+    // remove items from display
+    var children = document.querySelectorAll('#available-items li');
+    children.forEach(function(child, index) {child.remove(); })
+
+    // remove items from display
+    var children = document.querySelectorAll('#basket li');
+    children.forEach(function(child, index) {child.remove(); })
+}
+
+function displayAdmin()
+{
+    for (var i = 0; i < items.length; i++)
+    {
+        displayAdminAvailable(items[i]);
+    }
+}
+
+function displayAdminAvailable(item)
+{
+    var olItems = getElement("available-items");
+    var cloneTemplate;
+    itemTemplate = getElement("admin-template");
+
+    cloneTemplate = itemTemplate.cloneNode(true);
+    var li = document.createElement("li");
+
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, item.ID);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, item.Type);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, item.Image);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#eName/, item.Name);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#fName/, item.French);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#dueDays/, item.Due);
+
+    if (item.Type == "Book")
+    {
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="Book"/, 'value="Book" selected');
+        // cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="CD"/, 'value="CD" );
+    }
+    else
+    {
+        // cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#bookSelected/, "");
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="CD"/, 'value="CD" selected');
+    }
+
+    li.innerHTML = cloneTemplate.innerHTML;
+    olItems.appendChild(li);
+}
+
+function updateItem(itemID, property, value)
+{
+    for (var i = 0; i < items.length; i++)
+    {
+        if (items[i].ID == itemID)
+        {
+            items[i][property] = value;
+            displayAdminAvailable(item);
+            
+            break;
+        }
+    }
+}
+
+function deleteItem(itemID)
+{
+
+    document.querySelector("#available-items li[id='"+itemID+"']" ).remove();
+
+    for (var i = 0; i < items.length; i++)
+    {
+        if (items[i].ID == itemID)
+        {
+            items.splice(i, 1);
+
+            break;
+        }
+    }
+
+}
+
 
 function nameCheck(fieldValue)
 {
@@ -164,9 +311,32 @@ function addItem(itemID)
                 cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
             }
             
+            /*
             var dueDate = new Date();
             dueDate.setDate(dueDate.getDate() + items[i].Due);
             dueDate = dueDate.getFullYear() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getDate();
+            */
+
+            var date = new Date();
+			var month, day;
+				
+			date = date.addDays(items[i].Due);
+			month = date.getMonth() + 1;
+			day = date.getDate();
+				
+            if (month < 10)
+            {
+				month = '0' + month;
+            }
+				
+            if (day < 10)
+            {
+				day = '0' + day;
+            }
+				
+			var dueDate = date.getFullYear() + '-' + month + '-' + day;
+
+
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, dueDate);
             
             basket.push(items[i]);
@@ -182,13 +352,46 @@ function addItem(itemID)
     olBasket.appendChild(li);
 }
 
+function addNewItem()
+{
+    if (getElement("name").value == "admin")
+    {
+        var eName = getElement("eName").value;
+        var fName = getElement("fName").value;
+        var image = getElement("image").value;
+        var due = getElement("dueDays").value;
+        var type = getElement("type").value;
+    
+        var item = {"ID": ++lastID, "Type": type, "Image": image, "Name": eName, "French": fName, "Due": due};
+        items.push(item);
+        displayAdminAvailable(item);
+
+    }
+    else{
+        alert("You must be an admin to add a new title.");
+    }
+
+    /*
+    <form id="newItem" onsubmit = "event.preventDefault(); addNewItem();">
+    English Name: <input type="text" id="eName">
+    French Name:  <input type="text" id="fName">
+    Image: <input type="text" id="image">
+    Due: <input type="text" id="dueDays">
+    Type: <select id="type">
+            <option value="B">Book</option>
+            <option value="C">CD</option>
+        </select>
+    </form>
+    */
+}
+
 function removeItem(itemID)
 {
     var olItems = getElement("available-items");
     var cloneTemplate;
     itemTemplate = getElement("item-template");
 
-    for (var i = 0; i< basket.length; i++)
+    for (var i = 0; i < basket.length; i++)
     {
         if (basket[i].ID == itemID)
         {
@@ -246,6 +449,10 @@ function confirmation()
 
 
 
+function setVisibility(id, visibility)
+{
+    getElement(id).style.display = visibility;
+}
 
 //use document.getElementByID() to pick element
 function getElement(id)

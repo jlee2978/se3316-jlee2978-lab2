@@ -6,6 +6,30 @@
         <script type='text/javascript' src='script.js'></script>
     </head>
     <body>
+        <template id="admin-template">
+            <li id="#itemId" style="width: 100%;">
+                <span class="item-title">
+                    <input type="text" onchange="updateItem('#itemID', 'Name', this.value)" required="" value="#eName">
+                </span>
+                <span class="item-title">
+                    <input type="text" onchange="updateItem('#itemID', 'French', this.value)" required="" value="#fName">
+                </span>
+                <span class="item-title">
+                    <input type="text" onchange="updateItem('#itemID', 'Image', this.value)" required="" value="#image">
+                </span>
+                <span class="item-type">
+                    <select onchange="updateItem('#itemID', 'Type', this.value)">
+                        <option value="Book">Book</option>
+                        <option value="CD">CD</option>
+                    </select></span>
+                <span class="item-due">
+                    <input type="number" onchange="updateItem('#itemID', 'Due', this.value)" required="" value="#dueDays">
+                </span>
+                <button onclick="deleteItem('#itemID');">
+                    Delete
+                </button>
+            </li>  
+        </template>
         <template id="item-template">
             <li id="#itemID" style="width: 100%;">
                 <span class="item-type" style="width:20%">
@@ -55,19 +79,36 @@
                         </select>
             <input type="Submit" value = "Login">
         </form>
-        <form id ="loggedIn">
-            <span id="userInfo">
 
-            </span>
-        </form>
-        <h1>Library Checkout</h1>
-        <h2>Items Available:</h2>
-        <ol id="available-items" style="list-style: none"></ol>
-        <h2>Checkout List:</h2>
-        <ol id="basket"style="list-style: none">        
-            <button onclick="confirmation();">
-                    Checkout
-            </button>
-        </ol>
+        <div id="main-section" style="display:none">
+            <form id ="loggedIn" onsubmit = "event.preventDefault(); logout();">
+                <span id="userInfo">
+
+                </span>
+                <input type="Submit" value = "Logout">
+            </form>
+            <h1>Library Checkout</h1>
+            <h2>Items Available:</h2>
+            <ol id="available-items" style="list-style: none"></ol>
+            <form id="newItem" onsubmit = "event.preventDefault(); addNewItem();" style="display:none">
+                English Name: <input type="text" id="eName" required>
+                French Name:  <input type="text" id="fName" required>
+                Image: <input type="text" id="image">
+                Type: <select id="type" required>
+                    <option value="Book">Book</option>
+                    <option value="CD">CD</option>
+                </select>            
+                Due: <input type="number" id="dueDays" required>
+                <input type="Submit" value = "Add New Item">
+            </form>
+            <div id="checkout" style="display:none">
+                <h2>Checkout List:</h2>
+                <ol id="basket"style="list-style: none">        
+                    <button onclick="confirmation();">
+                            Checkout
+                    </button>
+                </ol>            
+            </div>
+        </div>
     </body>
 </html>
