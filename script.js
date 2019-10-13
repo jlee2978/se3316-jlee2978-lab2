@@ -107,30 +107,35 @@ function birthCheck(fieldValue)
 
 function displayItems()
 {
+    for (var i = 0; i < items.length; i++)
+    {
+        displayAvailable(items[i]);
+    }
+}
+
+function displayAvailable(item)
+{
     var olItems = getElement("available-items");
     var cloneTemplate;
     itemTemplate = getElement("item-template");
 
-    for (var i = 0; i < items.length; i++)
+    cloneTemplate = itemTemplate.cloneNode(true);
+    var li = document.createElement("li");
+
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, item.ID);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, item.Type);
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, item.Image);
+    if (getElement("language").value == "E")
     {
-        cloneTemplate = itemTemplate.cloneNode(true);
-        var li = document.createElement("li");
-
-        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, items[i].ID);
-        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
-        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
-        if (getElement("language").value == "E")
-        {
-            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
-        }
-        else{
-            cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
-        }
-        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, items[i].Due);
-
-        li.innerHTML = cloneTemplate.innerHTML;
-        olItems.appendChild(li);
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, item.Name);
     }
+    else{
+        cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, item.French);
+    }
+    cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#due/, item.Due);
+
+    li.innerHTML = cloneTemplate.innerHTML;
+    olItems.appendChild(li);
 }
 
 function addItem(itemID)
@@ -206,7 +211,7 @@ function removeItem(itemID)
 
             li.innerHTML = cloneTemplate.innerHTML;
             olItems.appendChild(li);
-            
+
             //remove item from the basket array and also remove it from the displayed list item
             document.querySelector('#basket li[id="'+itemID+'"]').remove();
             basket.splice(i, 1);
@@ -215,7 +220,29 @@ function removeItem(itemID)
     }
 }
 
+function confirmation()
+{
+    var answer = window.confirm("Checkout?");
+    if (answer)
+    {
+        for (var i = basket.length; i > 0; i--)
+        {
+            document.querySelector('#basket li[id="'+basket[i-1].ID+'"]').remove();
+            basket.splice(i, 1);
+        }
+    }
+    else{
+        for (var i = 0; i < basket.length; i++)
+        {
+            items.push(basket[i]);
+            displayAvailable(basket[i]);
+            document.querySelector('#basket li[id="'+basket[i].ID+'"]').remove();
+        }
+    }
 
+    //clear basket memory
+    basket = [];
+}
 
 
 
