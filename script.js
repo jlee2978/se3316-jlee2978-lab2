@@ -8,11 +8,11 @@ items.push({"ID": 2, "Type": "Book", "Image": "book2.jpg", "Name": "The Lord of 
 items.push({"ID": 3, "Type": "Book", "Image": "book3.jpg", "Name": "The Alchemist", "French": "L'alchimiste", "Due": 30});
 items.push({"ID": 4, "Type": "Book", "Image": "book4.jpg", "Name": "The Little Prince", "French": "Le petit Prince", "Due": 30});
 items.push({"ID": 5, "Type": "Book", "Image": "book5.jpg", "Name": "The Hobbit", "French": "Le Hobbit", "Due": 30});
-items.push({"ID": 6, "Type": "CD", "Image": "cd1.jpg", "Name": "The Marshall Mathers LP", "French": "Marshall Mathers LP [Française]", "Due": 10});
+items.push({"ID": 6, "Type": "CD", "Image": "cd1.jpg", "Name": "Stories", "French": "Histoires", "Due": 10});
 items.push({"ID": 7, "Type": "CD", "Image": "cd2.jpg", "Name": "Stoney", "French": "Stoney [Française]", "Due": 10});
-items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Secrets", "French": "Les amis gardent leurs secrets", "Due": 10});
-items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "French": "Le spectacle Eminem", "Due": 10});
-items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Come Away With Me", "French": "Viens avec moi", "Due": 10});
+items.push({"ID": 8, "Type": "CD", "Image": "cd3.jpg", "Name": "Friends Keep Secrets", "French": "Les Amis Gardent Leurs Secrets", "Due": 10});
+items.push({"ID": 9, "Type": "CD", "Image": "cd4.jpg", "Name": "The Eminem Show", "French": "Le Spectacle Eminem", "Due": 10});
+items.push({"ID": 10, "Type": "CD", "Image": "cd5.jpg", "Name": "Suncity", "French": "Suncity [Française]", "Due": 10});
 
 lastID = items.length;
 
@@ -92,9 +92,6 @@ function login()
 
     setVisibility('main-section', 'block');
     setVisibility('loggedIn', 'block');
-    //show items and basket
-    //getElement("available-items").style.display = "block";
-    //getElement("basket").style.display = "block";
 }
 
 function logout()
@@ -116,26 +113,15 @@ function logout()
     setVisibility('available-items', 'none');
     setVisibility('checkout', 'none');
 
-    //clear basket
-    /*
-    for (var i = 0; i < basket.length; i++)
-    {
-        removeItem(basket[i]);
-    }
-    basket = [];
-    */
-
-    
-
     //clear items and basket
     getElement("available-items").style.display = "none";
     getElement("basket").style.display = "none";
 
-    // remove items from display
+    //remove items from display
     var children = document.querySelectorAll('#available-items li');
     children.forEach(function(child, index) {child.remove(); })
 
-    // remove items from display
+    //remove items from display
     var children = document.querySelectorAll('#basket li');
     children.forEach(function(child, index) {child.remove(); })
 }
@@ -167,11 +153,9 @@ function displayAdminAvailable(item)
     if (item.Type == "Book")
     {
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="Book"/, 'value="Book" selected');
-        // cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="CD"/, 'value="CD" );
     }
     else
     {
-        // cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#bookSelected/, "");
         cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/value="CD"/, 'value="CD" selected');
     }
 
@@ -195,7 +179,6 @@ function updateItem(itemID, property, value)
 
 function deleteItem(itemID)
 {
-
     document.querySelector("#available-items li[id='"+itemID+"']" ).remove();
 
     for (var i = 0; i < items.length; i++)
@@ -213,7 +196,6 @@ function deleteItem(itemID)
 
 function nameCheck(fieldValue)
 {
-    //var fieldValue = document.getElementById("name").nodeValue;     //username? .value?
     if (fieldValue == null || fieldValue == "")
     {
         //empty field
@@ -300,8 +282,6 @@ function addItem(itemID)
         {
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#itemID/gi, itemID);
             cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#type/, items[i].Type);
-            //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#image/, items[i].Image);
-            //cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].Name);
             
             if (getElement("language").value == "E")
             {
@@ -310,12 +290,6 @@ function addItem(itemID)
             else{
                 cloneTemplate.innerHTML = cloneTemplate.innerHTML.replace(/#name/, items[i].French);
             }
-            
-            /*
-            var dueDate = new Date();
-            dueDate.setDate(dueDate.getDate() + items[i].Due);
-            dueDate = dueDate.getFullYear() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getDate();
-            */
 
             var date = new Date();
 			var month, day;
@@ -370,19 +344,6 @@ function addNewItem()
     else{
         alert("You must be an admin to add a new title.");
     }
-
-    /*
-    <form id="newItem" onsubmit = "event.preventDefault(); addNewItem();">
-    English Name: <input type="text" id="eName">
-    French Name:  <input type="text" id="fName">
-    Image: <input type="text" id="image">
-    Due: <input type="text" id="dueDays">
-    Type: <select id="type">
-            <option value="B">Book</option>
-            <option value="C">CD</option>
-        </select>
-    </form>
-    */
 }
 
 function removeItem(itemID)
@@ -448,7 +409,7 @@ function confirmation()
 }
 
 
-
+//set visibility of different HTML elements
 function setVisibility(id, visibility)
 {
     getElement(id).style.display = visibility;
